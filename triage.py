@@ -61,7 +61,7 @@ def check_mail(folder, flagged=None):
         urls = re.findall("https?://[^\\s\"'<>]+", raw)
         for u in urls:
             if re.match("https?://[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+", u):
-                s = s + W_IP_LINk 
+                s = s + W_IP_LINK
             if "xn--" in u: #punycode
                 s = s + W_PUNYCODE_LINK
         # sender says paypal/microsoft/amazon but domain is weird
