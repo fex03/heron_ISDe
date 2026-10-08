@@ -1,8 +1,17 @@
 # quick phishing checker for the mail export - L. Garcia, march 2025
 # TODO: make this nicer at some point
+
+""" ISSUES: 
+- NO MODULARITY
+- dependency on the owner laptop path, should be relative (in check_mail function)
+- no error handling (or too generic)
+- hard coded files with explicit numbers
+- variables not used
+- very poor documentation and not understandable code
 import re
 import os
 import sys
+"""
 
 W_REPLY_TO_MISMATCH = 2
 
