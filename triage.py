@@ -1,5 +1,14 @@
 # quick phishing checker for the mail export - L. Garcia, march 2025
 # TODO: make this nicer at some point
+""" ISSUES: 
+- NO MODULARITY
+- dependency on the owner laptop path, should be relative (in check_mail function)
+- no error handling (or too generic)
+- hard coded files with explicit numbers
+- variables not used
+- very poor documentation and not understandable code
+"""
+
 import re
 import os
 import sys
@@ -10,7 +19,7 @@ verdicts = []
 KEYWORDS = ["urgent", "verify", "suspended", "password", "expires", "act now",
             "congratulations", "winner", "claim", "immediately", "gift card"]
 
-def check_mail(folder="/home/lgarcia/mail_export/", flagged=[]):
+def check_mail(folder="//Users/fex/Library/CloudStorage/Dropbox/franci/Università/Magistrale/1_anno/ISDe/Code/heron_ISDe/data/samples/", flagged=[]):
     files = os.listdir(folder)
     for fn in files:
         if not fn.endswith(".eml"):
