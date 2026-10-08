@@ -34,7 +34,11 @@ PHISHING_THRESHOLD = 5
 SUSPICIOUS_THRESHOLD = 3
 
 
-def check_mail(folder, flagged=[]):
+def check_mail(folder, flagged=None):
+    
+    if flagged is None:
+        flagged = [] #didn't understand why: speaking of python issure
+        
     files = os.listdir(folder)
     for fn in files:
         if not fn.endswith(".eml"):
