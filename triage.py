@@ -1,49 +1,41 @@
 # quick phishing checker for the mail export - L. Garcia, march 2025
 # TODO: make this nicer at some point
-""" ISSUES: 
-- NO MODULARITY
-- dependency on the owner laptop path, should be relative (in check_mail function)
-- no error handling (or too generic)
-- hard coded files with explicit numbers
-- variables not used
-- very poor documentation and not understandable code
-"""
-
 import re
 import os
 import sys
 
-
-KEYWORDS = ["urgent", "verify", "suspended", "password", "expires", "act now",
-            "congratulations", "winner", "claim", "immediately", "gift card"]
-
-W_IP_LINK = 3
-
-W_PUNYCODE_LINK = 3
-
-W_BRAND_MISMATCH = 3
+W_REPLY_TO_MISMATCH = 2
 
 W_AUTH_FAIL = 2
 
-W_REPLY_TO_MISMATCH = 2
+W_BRAND_MISMATCH = 3
 
 PHISHING_THRESHOLD = 5
 
 SUSPICIOUS_THRESHOLD = 3
 
+W_PUNYCODE_LINK = 3
+
+W_IP_LINK = 3
+
+W_KEYWORD = 1
+
+
+KEYWORDS = ["urgent", "verify", "suspended", "password", "expires", "act now",
+            "congratulations", "winner", "claim", "immediately", "gift card"]
 
 def check_mail(folder, flagged=None):
     scores = {}
     verdicts = []
-    
+
     if flagged is None:
-        flagged = [] #didn't understand why: speaking of python issue
-        
+        flagged = [] #didnt understand why
+
     files = os.listdir(folder)
     for fn in files:
         if not fn.endswith(".eml"):
             continue
-        raw = open(folder + "/" + fn, encoding="utf-8", errors="ignore").read()
+        raw = open(os.path.join(folder, fn), encoding="utf-8", errors="ignore").read()
         s = 0
         try:
             frm = re.search("From: (.*)", raw).group(1)
@@ -56,13 +48,13 @@ def check_mail(folder, flagged=None):
         low = raw.lower()
         for kw in KEYWORDS:
             if kw in low:
-                s = s + 1
+                s = s + W_KEYWORD
         # links that look bad
         urls = re.findall("https?://[^\\s\"'<>]+", raw)
         for u in urls:
             if re.match("https?://[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+", u):
-                s = s + W_IP_LINK
-            if "xn--" in u: #punycode
+                s = s + W_IP_LINK  # ip address url, very bad
+            if "xn--" in u:  # punycode
                 s = s + W_PUNYCODE_LINK
         # sender says paypal/microsoft/amazon but domain is weird
         if "paypal" in frm.lower() and "paypal.com" not in frm.lower():
@@ -100,7 +92,6 @@ def check_mail(folder, flagged=None):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("You must pass a folder path as argument.")
+        print("you must pass a folder path as argument", file=sys.stderr)
         sys.exit(2)
     check_mail(sys.argv[1])
-
