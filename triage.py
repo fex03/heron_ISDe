@@ -121,7 +121,7 @@ def report(verdicts):
     print("flagged:", [v[0] for v in verdicts if v[1] == "PHISHING"])
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     if len(sys.argv) != 2:
         print("you must pass a folder path as argument", file=sys.stderr)
         sys.exit(2)
